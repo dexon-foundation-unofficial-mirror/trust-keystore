@@ -150,6 +150,21 @@ class KeyStoreTests: XCTestCase {
         XCTAssertNoThrow(try account.sign(hash: Data(repeating: 0, count: 32), password: "newPassword"))
     }
 
+    func testImportWalletWithMultipleDerivationPaths() throws {
+        let keyStore = try KeyStore(keyDirectory: keyDirectory)
+        let wallet = try keyStore.import(mnemonic: "often tobacco bread scare imitate song kind common bar forest yard wisdom",
+                                         passphrase: "TREZOR",
+                                         encryptPassword: "newPassword",
+                                         derivationPaths: [Ethereum().derivationPath(at: 0), Bitcoin().derivationPath(at: 0)])
+
+        XCTAssertEqual(wallet.accounts.count, 2)
+
+        let account = try wallet.getAccounts(derivationPaths: [Ethereum().derivationPath(at: 0), Bitcoin().derivationPath(at: 0)], password: "newPassword").first!
+
+        XCTAssertNotNil(keyStore.hdWallet)
+        XCTAssertNoThrow(try account.sign(hash: Data(repeating: 0, count: 32), password: "newPassword"))
+    }
+
     func testExportMnemonic() throws {
         let mnemonic = "often tobacco bread scare imitate song kind common bar forest yard wisdom"
         let keyStore = try KeyStore(keyDirectory: keyDirectory)

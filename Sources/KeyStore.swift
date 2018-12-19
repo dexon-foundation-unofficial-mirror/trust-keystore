@@ -144,6 +144,30 @@ public final class KeyStore {
         return wallet
     }
 
+    /// Imports a wallet with multiple derivation paths.
+    ///
+    /// - Parameters:
+    ///   - mnemonic: wallet's mnemonic phrase
+    ///   - passphrase: wallet's password
+    ///   - encryptPassword: password to use for encrypting
+    /// - Returns: new account
+    public func `import`(mnemonic: String, passphrase: String = "", encryptPassword: String, derivationPaths: [DerivationPath]) throws -> Wallet {
+        if !Crypto.isValid(mnemonic: mnemonic) {
+            throw Error.invalidMnemonic
+        }
+
+        let key = try KeystoreKey(password: encryptPassword, mnemonic: mnemonic, passphrase: passphrase)
+        let url = makeAccountURL()
+        let wallet = Wallet(keyURL: url, key: key)
+        let _ = try wallet.getAccounts(derivationPaths: derivationPaths, password: encryptPassword)
+
+        wallets.append(wallet)
+
+        try save(wallet: wallet, in: keyDirectory)
+
+        return wallet
+    }
+
     /// Exports a wallet as JSON data.
     ///
     /// - Parameters:
