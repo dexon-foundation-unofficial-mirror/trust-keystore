@@ -86,6 +86,7 @@ class KeyStoreTests: XCTestCase {
         let keyStore = try KeyStore(keyDirectory: keyDirectory)
         let wallet = keyStore.hdWallet!
         _ = try keyStore.addAccounts(wallet: wallet, derivationPaths: [
+            Dexon().derivationPath(at: 0),
             Ethereum().derivationPath(at: 0),
             Callisto().derivationPath(at: 0),
             POA().derivationPath(at: 0),
@@ -93,7 +94,7 @@ class KeyStoreTests: XCTestCase {
 
         let savedKeyStore = try KeyStore(keyDirectory: keyDirectory)
         let savedWallet = savedKeyStore.hdWallet!
-        XCTAssertEqual(savedWallet.accounts.count, 3)
+        XCTAssertEqual(savedWallet.accounts.count, 4)
     }
 
     func testDeleteKey() throws {

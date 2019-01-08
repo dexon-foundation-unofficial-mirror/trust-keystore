@@ -167,8 +167,9 @@ extension KeystoreKey: Codable {
         activeAccounts = try values.decodeIfPresent([Account].self, forKey: .activeAccounts) ?? []
 
         if let address = address, activeAccounts.isEmpty {
-            let account = Account(wallet: .none, address: address, derivationPath: Ethereum().derivationPath(at: 0))
-            activeAccounts.append(account)
+            let dexonAccount = Account(wallet: .none, address: address, derivationPath: Dexon().derivationPath(at: 0))
+            let ethAccount = Account(wallet: .none, address: address, derivationPath: Ethereum().derivationPath(at: 0))
+            activeAccounts.append(contentsOf: [dexonAccount, ethAccount])
         }
     }
 

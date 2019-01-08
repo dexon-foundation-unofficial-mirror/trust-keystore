@@ -52,7 +52,7 @@ public final class KeyStore {
         let wallet = Wallet(keyURL: url, key: key)
         switch wallet.type {
         case .encryptedKey:
-            let _ = try wallet.getAccount(password: password, coin: Ethereum().coinType)
+            let _ = try wallet.getAccount(password: password, coin: Dexon().coinType)
         case .hierarchicalDeterministicWallet:
             let _ = try wallet.getAccounts(derivationPaths: derivationPaths, password: password)
         }
